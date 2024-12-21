@@ -1,4 +1,4 @@
-package org.example;
+package katarzyna.novikova.service;
 
 public interface ToDoListService {
     void run();
