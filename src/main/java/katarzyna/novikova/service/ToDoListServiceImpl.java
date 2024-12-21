@@ -31,24 +31,23 @@ public class ToDoListServiceImpl implements ToDoListService {
             } else if (input.startsWith(Commands.GET.getName())) {
                 //get 1
                 String[] result = input.split(" ");
-                if(result.length <= 1) {
+                if (result.length <= 1) {
                     System.out.println("incorrect command usage");
                 } else {
                     try {
                         long id = Long.parseLong(result[1]);
                         boolean isTaskFound = false;
-                        for(Task task : tasks) {
-                            if(task.getId() == id) {
+                        for (Task task : tasks) {
+                            if (task.getId() == id) {
                                 isTaskFound = true;
                                 System.out.println(task);
                                 break;
                             }
                         }
-                        if(!isTaskFound) {
+                        if (!isTaskFound) {
                             System.out.printf("Task with ID = %d was not found\n", id);
                         }
-                    }
-                  catch (NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         System.err.printf("Provided %s is not a number. Please provide a numeric task ID\n", result[1]);
                     }
                 }
@@ -84,4 +83,34 @@ public class ToDoListServiceImpl implements ToDoListService {
             }
         }
     }
+
+    private String getTaskName(String input) {
+        String[] results = input.split(" ");
+        StringBuilder taskName = new StringBuilder();
+        for (int i = 0; i < results.length; i++) {
+            if (i < results.length - 1) {
+                taskName.append(results[i]).append(" ");
+            } else {
+                Priority priority = getPriority(input);
+                if(priority == null) {
+                    taskName.append(results[i]);
+                }
+            }
+        }
+        return taskName.toString().trim();
+    }
+
+    private Priority getPriority(String input) {
+        if (input.toUpperCase().endsWith(Priority.HIGH.name())) {
+            return Priority.HIGH;
+        } else if (input.toUpperCase().endsWith(Priority.AVERAGE.name())) {
+            return Priority.AVERAGE;
+        } else if (input.toUpperCase().endsWith(Priority.LOW.name())) {
+            return Priority.LOW;
+        } else {
+            return null;
+        }
+    }
 }
+
+
