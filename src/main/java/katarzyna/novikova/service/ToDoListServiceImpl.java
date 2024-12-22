@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static katarzyna.novikova.util.TasksUtil.printAll;
+
 public class ToDoListServiceImpl implements ToDoListService {
 
     private final List<Task> tasks = new ArrayList<>();
 
     //todo
-    //1) support task priority: add, display, sort by priority
+    //1) sort by priority
     // Test get command
     //2) fix all tests, add new tests for tasks & priority
     //3) refactor and cleanup
@@ -27,52 +29,29 @@ public class ToDoListServiceImpl implements ToDoListService {
             if (input.equals(Commands.EXIT.getName()) || input.equals(Commands.QUIT.getName()) || input.equals(Commands.Q.getName())) {
                 break;
             } else if (input.equals(Commands.GET_ALL.getName())) {
-                System.out.println(tasks);
+                printAll(tasks);
             } else if (input.startsWith(Commands.GET.getName())) {
                 //get 1
-                String[] result = input.split(" ");
-                if (result.length <= 1) {
-                    System.out.println("incorrect command usage");
-                } else {
-                    try {
-                        long id = Long.parseLong(result[1]);
-                        boolean isTaskFound = false;
-                        for (Task task : tasks) {
-                            if (task.getId() == id) {
-                                isTaskFound = true;
-                                System.out.println(task);
-                                break;
-                            }
-                        }
-                        if (!isTaskFound) {
-                            System.out.printf("Task with ID = %d was not found\n", id);
-                        }
-                    } catch (NumberFormatException e) {
-                        System.err.printf("Provided %s is not a number. Please provide a numeric task ID\n", result[1]);
-                    }
+                Task task = getTaskById(input);
+                if(task != null) {
+                    System.out.println(task);
                 }
             } else if (input.startsWith(Commands.ADD.getName())) {
                 String[] result = input.split(" ");
                 if (result.length <= 1) {
                     System.err.println("incorrect command usage");
                 } else {
-                    Task task = new Task(input.substring(4), Priority.AVERAGE);
+                    Task task = getTask(input);
                     tasks.add(task);
-                    System.out.println(tasks);
+                    printAll(tasks);
                 }
             } else if (input.startsWith(Commands.DELETE.getName())) {
-                String taskName = input.substring(7);
-                Task taskToRemove = null;
-                for (Task current : tasks) {
-                    if (current.getName().equals(taskName)) {
-                        taskToRemove = current;
-                    }
-                }
+                Task taskToRemove = getTaskById(input);
                 if (taskToRemove == null) {
-                    System.err.println("Task " + taskName + " has not been found");
+                    System.err.println("Task has not been found");
                 } else {
                     tasks.remove(taskToRemove);
-                    System.out.println(tasks);
+                    printAll(tasks);
                 }
             } else if (input.equals(Commands.HELP.getName())) {
                 for (Commands command : Commands.values()) {
@@ -84,20 +63,24 @@ public class ToDoListServiceImpl implements ToDoListService {
         }
     }
 
-    private String getTaskName(String input) {
+    private Task getTask(String input) {
+        //add test 123 high
         String[] results = input.split(" ");
         StringBuilder taskName = new StringBuilder();
-        for (int i = 0; i < results.length; i++) {
+        Priority priority = getPriority(input);
+        for (int i = 1; i < results.length; i++) {
             if (i < results.length - 1) {
                 taskName.append(results[i]).append(" ");
             } else {
-                Priority priority = getPriority(input);
-                if(priority == null) {
+                if (priority == null) {
                     taskName.append(results[i]);
+                    priority = Priority.AVERAGE;
                 }
             }
         }
-        return taskName.toString().trim();
+
+        return new Task(taskName.toString().trim(), priority);
+
     }
 
     private Priority getPriority(String input) {
@@ -111,6 +94,27 @@ public class ToDoListServiceImpl implements ToDoListService {
             return null;
         }
     }
+
+    private Task getTaskById(String input) {
+        String[] result = input.split(" ");
+        if (result.length <= 1) {
+            System.out.println("incorrect command usage");
+        } else {
+            try {
+                long id = Long.parseLong(result[1]);
+                for (Task task : tasks) {
+                    if (task.getId() == id) {
+                        return task;
+                    }
+                }
+                System.out.printf("Task with ID = %d was not found\n", id);
+            } catch (NumberFormatException e) {
+                System.err.printf("Provided %s is not a number. Please provide a numeric task ID\n", result[1]);
+            }
+        }
+        return null;
+    }
+
 }
 
 

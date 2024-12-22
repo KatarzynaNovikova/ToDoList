@@ -1,5 +1,7 @@
 package katarzyna.novikova.domain;
 
+import java.util.List;
+
 public class Task {
     private static long idCounter = 1;
     private final long id;
@@ -34,6 +36,9 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%d | %s | %s", id, name, priority);
+        return String.format("| %-3d | %-30s | %-7s |", id, name, priority);
     }
+
+
 }
+
