@@ -39,6 +39,8 @@ public class Task {
         return String.format("| %-3d | %-30s | %-7s |", id, name, priority);
     }
 
-
+    public static void resetTaskCounter(){
+        idCounter = 1;
+    }
 }
 

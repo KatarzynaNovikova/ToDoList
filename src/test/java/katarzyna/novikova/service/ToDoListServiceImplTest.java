@@ -5,14 +5,22 @@ import katarzyna.novikova.domain.Commands;
 import katarzyna.novikova.domain.Priority;
 import katarzyna.novikova.service.ToDoListService;
 import katarzyna.novikova.service.ToDoListServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.PrintStream;
 import java.util.List;
 
+import static katarzyna.novikova.domain.Task.resetTaskCounter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ToDoListServiceImplTest extends BaseTest {
-    private final ToDoListService toDoListService = new ToDoListServiceImpl();
+    private ToDoListService toDoListService;
+    @BeforeEach
+    public void beforeEach() {
+        toDoListService = new ToDoListServiceImpl();
+        resetTaskCounter();
+    }
 
     @Test
     public void shouldAdd1TaskSuccessfullyAndPrintResult() {
