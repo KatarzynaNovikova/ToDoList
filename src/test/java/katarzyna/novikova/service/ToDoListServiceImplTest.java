@@ -2,6 +2,7 @@ package katarzyna.novikova.service;
 
 import katarzyna.novikova.BaseTest;
 import katarzyna.novikova.domain.Commands;
+import katarzyna.novikova.domain.Priority;
 import katarzyna.novikova.service.ToDoListService;
 import katarzyna.novikova.service.ToDoListServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,9 @@ public class ToDoListServiceImplTest extends BaseTest {
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
-        assertThat(resultOutput.get(1)).isEqualTo("[task1]");
+        assertThat(resultOutput.get(1)).contains("1");
+        assertThat(resultOutput.get(1)).contains("task1");
+        assertThat(resultOutput.get(1)).contains(Priority.AVERAGE.name());
     }
 
     @Test
@@ -34,8 +37,12 @@ public class ToDoListServiceImplTest extends BaseTest {
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
-        assertThat(resultOutput.get(1)).isEqualTo("[task1]");
-        assertThat(resultOutput.get(2)).isEqualTo("[task1, task2]");
+        assertThat(resultOutput.get(1)).contains("1");
+        assertThat(resultOutput.get(1)).contains("task1");
+        assertThat(resultOutput.get(1)).contains(Priority.AVERAGE.name());
+        assertThat(resultOutput.get(2)).contains("2");
+        assertThat(resultOutput.get(2)).contains("task2");
+        assertThat(resultOutput.get(2)).contains(Priority.AVERAGE.name());
     }
 
     @Test
@@ -54,26 +61,31 @@ public class ToDoListServiceImplTest extends BaseTest {
     @Test
     public void shouldDelete1TaskSuccessfullyAndPrintResult() {
         //given
-        provideInput(List.of("add task1", "delete task1", "quit"));
+        provideInput(List.of("add task1", "delete 1", "get all", "quit"));
         //when
         toDoListService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
-        assertThat(resultOutput.get(1)).isEqualTo("[task1]");
-        assertThat(resultOutput.get(2)).isEqualTo("[]");
+        assertThat(resultOutput.get(1)).contains("1");
+        assertThat(resultOutput.get(1)).contains("task1");
+        assertThat(resultOutput.get(1)).contains(Priority.AVERAGE.name());
+        assertThat(resultOutput.get(2)).contains("1");
+        assertThat(resultOutput.get(2)).contains("task1");
+        assertThat(resultOutput.get(2)).contains(Priority.AVERAGE.name());
+        assertThat(resultOutput.get(3)).isEqualTo("No tasks found");
     }
 
     @Test
     public void shouldPrintEmptyListSuccessfullyAfterAttemptToDeleteNonExistingTask() {
         //given
-        provideInput(List.of("delete task1", "q"));
+        provideInput(List.of("delete 1", "q"));
         //when
         toDoListService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
-        assertThat(resultOutput.get(1)).isEqualTo("[]");
+        assertThat(resultOutput.get(1)).isEqualTo("Task with ID = 1 was not found");
     }
 
     @Test
@@ -85,9 +97,18 @@ public class ToDoListServiceImplTest extends BaseTest {
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
-        assertThat(resultOutput.get(1)).isEqualTo("[task1]");
-        assertThat(resultOutput.get(2)).isEqualTo("[task1, task2]");
-        assertThat(resultOutput.get(3)).isEqualTo("[task1, task2]");
+        assertThat(resultOutput.get(1)).contains("1");
+        assertThat(resultOutput.get(1)).contains("task1");
+        assertThat(resultOutput.get(1)).contains(Priority.AVERAGE.name());
+        assertThat(resultOutput.get(2)).contains("2");
+        assertThat(resultOutput.get(2)).contains("task2");
+        assertThat(resultOutput.get(2)).contains(Priority.AVERAGE.name());
+        assertThat(resultOutput.get(3)).contains("1");
+        assertThat(resultOutput.get(3)).contains("task1");
+        assertThat(resultOutput.get(3)).contains(Priority.AVERAGE.name());
+        assertThat(resultOutput.get(4)).contains("2");
+        assertThat(resultOutput.get(4)).contains("task2");
+        assertThat(resultOutput.get(4)).contains(Priority.AVERAGE.name());
     }
 
     @Test
@@ -99,7 +120,7 @@ public class ToDoListServiceImplTest extends BaseTest {
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
-        assertThat(resultOutput.get(1)).isEqualTo("[]");
+        assertThat(resultOutput.get(1)).isEqualTo("No tasks found");
     }
 
     @Test

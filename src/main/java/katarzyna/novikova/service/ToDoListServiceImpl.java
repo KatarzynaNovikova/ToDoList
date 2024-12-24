@@ -33,7 +33,7 @@ public class ToDoListServiceImpl implements ToDoListService {
             } else if (input.startsWith(Commands.GET.getName())) {
                 //get 1
                 Task task = getTaskById(input);
-                if(task != null) {
+                if (task != null) {
                     System.out.println(task);
                 }
             } else if (input.startsWith(Commands.ADD.getName())) {
@@ -43,7 +43,7 @@ public class ToDoListServiceImpl implements ToDoListService {
                 } else {
                     Task task = getTask(input);
                     tasks.add(task);
-                    printAll(tasks);
+                    System.out.println(task);
                 }
             } else if (input.startsWith(Commands.DELETE.getName())) {
                 Task taskToRemove = getTaskById(input);
@@ -51,7 +51,7 @@ public class ToDoListServiceImpl implements ToDoListService {
                     System.err.println("Task has not been found");
                 } else {
                     tasks.remove(taskToRemove);
-                    printAll(tasks);
+                    System.out.println(taskToRemove);
                 }
             } else if (input.equals(Commands.HELP.getName())) {
                 for (Commands command : Commands.values()) {
