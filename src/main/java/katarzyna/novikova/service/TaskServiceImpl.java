@@ -10,6 +10,35 @@ public class TaskServiceImpl implements TaskService {
 
     private final List<Task> tasks = new ArrayList<>();
 
+    @Override
+    public Task get(String input) {
+        return getTaskById(input);
+    }
+
+    @Override
+    public void add(String input) {
+        String[] result = input.split(" ");
+        if (result.length <= 1) {
+            System.err.println("incorrect command usage");
+        } else {
+            Task task = buildTask(input);
+            tasks.add(task);
+            System.out.println(task);
+        }
+    }
+
+    @Override
+    public void delete(String input) {
+        Task taskToRemove = getTaskById(input);
+        if (taskToRemove == null) {
+            System.err.println("Task has not been found");
+        } else {
+            tasks.remove(taskToRemove);
+            System.out.println(taskToRemove);
+        }
+
+    }
+
     private Task buildTask(String input) {
         //add test 123 high
         String[] results = input.split(" ");

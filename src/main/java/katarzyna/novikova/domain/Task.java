@@ -42,5 +42,9 @@ public class Task {
     public static void resetTaskCounter(){
         idCounter = 1;
     }
+
+    public void print(){
+        System.out.println(this);
+    }
 }
 
