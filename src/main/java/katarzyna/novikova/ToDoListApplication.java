@@ -1,11 +1,12 @@
 package katarzyna.novikova;
 
-import katarzyna.novikova.service.ToDoListService;
-import katarzyna.novikova.service.ToDoListServiceImpl;
+import katarzyna.novikova.service.CommandService;
+import katarzyna.novikova.service.CommandServiceImpl;
+import katarzyna.novikova.service.TaskServiceImpl;
 
 public class ToDoListApplication {
     public static void main(String[] args) {
-        ToDoListService toDoListService = new ToDoListServiceImpl();
-        toDoListService.run();
+        CommandService commandService = new CommandServiceImpl(new TaskServiceImpl());
+        commandService.run();
     }
 }
