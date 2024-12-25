@@ -5,7 +5,7 @@ import katarzyna.novikova.domain.Task;
 import java.util.List;
 
 public interface TaskService {
-    void printAll();
+    List<Task> getAll();
 
     Task get(String input);
 

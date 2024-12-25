@@ -40,7 +40,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private Task buildTask(String input) {
-        //add test 123 high
         String[] results = input.split(" ");
         StringBuilder taskName = new StringBuilder();
         Priority priority = getPriority(input);
@@ -54,9 +53,7 @@ public class TaskServiceImpl implements TaskService {
                 }
             }
         }
-
         return new Task(taskName.toString().trim(), priority);
-
     }
 
     private Priority getPriority(String input) {
@@ -92,13 +89,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void printAll() {
+    public List<Task> getAll() {
         if (tasks.isEmpty()) {
             System.out.println("No tasks found");
         }
-        for (Task task : tasks) {
-            System.out.println(task);
-        }
+        return tasks;
     }
 
 }

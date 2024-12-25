@@ -16,12 +16,13 @@ public class CommandServiceImpl implements CommandService {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter command");
 
-        while (true) {
+        boolean keepRunning = true;
+        while (keepRunning) {
             String input = scanner.nextLine();
             if (input.equals(Commands.EXIT.getName()) || input.equals(Commands.QUIT.getName()) || input.equals(Commands.Q.getName())) {
-                break;
+                keepRunning = false;
             } else if (input.equals(Commands.GET_ALL.getName())) {
-                taskService.printAll();
+                taskService.getAll().forEach(task -> System.out.println(task));
             } else if (input.startsWith(Commands.GET.getName())) {
                 taskService.get(input).print();
             } else if (input.startsWith(Commands.ADD.getName())) {
