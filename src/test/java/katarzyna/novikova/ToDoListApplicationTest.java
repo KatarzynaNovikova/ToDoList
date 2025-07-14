@@ -18,6 +18,6 @@ class ToDoListApplicationTest extends BaseTest {
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
-        assertThat(resultOutput.get(1)).isEqualTo("[task1]");
+        assertThat(resultOutput.get(1)).contains("1", "task1", "AVERAGE");
     }
 }
