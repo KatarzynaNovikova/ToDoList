@@ -1,5 +1,6 @@
 package katarzyna.novikova;
 
+import katarzyna.novikova.domain.Priority;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,6 +19,8 @@ class ToDoListApplicationTest extends BaseTest {
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
-        assertThat(resultOutput.get(1)).contains("1", "task1", "AVERAGE");
+        assertThat(resultOutput.get(1)).contains("1");
+        assertThat(resultOutput.get(1)).contains("task1");
+        assertThat(resultOutput.get(1)).contains(Priority.AVERAGE.name());
     }
 }

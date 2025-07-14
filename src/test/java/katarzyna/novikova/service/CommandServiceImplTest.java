@@ -3,23 +3,28 @@ package katarzyna.novikova.service;
 import katarzyna.novikova.BaseTest;
 import katarzyna.novikova.domain.Commands;
 import katarzyna.novikova.domain.Priority;
-import katarzyna.novikova.service.ToDoListService;
-import katarzyna.novikova.service.ToDoListServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static katarzyna.novikova.domain.Task.resetTaskCounter;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ToDoListServiceImplTest extends BaseTest {
-    private final ToDoListService toDoListService = new ToDoListServiceImpl();
+public class CommandServiceImplTest extends BaseTest {
+    private CommandService commandService;
+    @BeforeEach
+    public void beforeEach() {
+        commandService = new CommandServiceImpl(new TaskServiceImpl());
+        resetTaskCounter();
+    }
 
     @Test
     public void shouldAdd1TaskSuccessfullyAndPrintResult() {
         //given
         provideInput(List.of("add task1", "exit"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
@@ -33,7 +38,7 @@ public class ToDoListServiceImplTest extends BaseTest {
         //given
         provideInput(List.of("add task1", "add task2", "exit"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
@@ -50,7 +55,7 @@ public class ToDoListServiceImplTest extends BaseTest {
         //given
         provideInput(List.of("add", "exit"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
@@ -63,7 +68,7 @@ public class ToDoListServiceImplTest extends BaseTest {
         //given
         provideInput(List.of("add task1", "delete 1", "get all", "quit"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
@@ -81,7 +86,7 @@ public class ToDoListServiceImplTest extends BaseTest {
         //given
         provideInput(List.of("delete 1", "q"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
@@ -93,7 +98,7 @@ public class ToDoListServiceImplTest extends BaseTest {
         //given
         provideInput(List.of("add task1", "add task2", "get all", "exit"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
@@ -116,7 +121,7 @@ public class ToDoListServiceImplTest extends BaseTest {
         //given
         provideInput(List.of("get all", "quit"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
@@ -128,7 +133,7 @@ public class ToDoListServiceImplTest extends BaseTest {
         //given
         provideInput(List.of("help", "exit"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
@@ -146,12 +151,58 @@ public class ToDoListServiceImplTest extends BaseTest {
         //given
         provideInput(List.of("abc", "exit"));
         //when
-        toDoListService.run();
+        commandService.run();
         //then
         List<String> resultOutput = getSystemOutput(); // actual result
         assertThat(resultOutput.get(0)).isEqualTo("Enter command");
         List<String> resultOutputError = getSystemErrors();
         assertThat(resultOutputError.get(0)).isEqualTo("Unknown command: abc");
     }
+
+    @Test
+    public void shouldAddTaskAndSetHighPriority() {
+        //given
+        provideInput(List.of("add cook dinner high", "exit"));
+        //when
+        commandService.run();
+        //then
+        List<String> resultOutput = getSystemOutput(); // actual result
+        assertThat(resultOutput.get(0)).isEqualTo("Enter command");
+        assertThat(resultOutput.get(1)).contains("cook dinner").contains(Priority.HIGH.name());
+    }
+    @Test
+    public void shouldAddTaskAndSetAveragePriority() {
+        //given
+        provideInput(List.of("add cook dinner average", "exit"));
+        //when
+        commandService.run();
+        //then
+        List<String> resultOutput = getSystemOutput(); // actual result
+        assertThat(resultOutput.get(0)).isEqualTo("Enter command");
+        assertThat(resultOutput.get(1)).contains("cook dinner").contains(Priority.AVERAGE.name());
+    }
+    @Test
+    public void shouldAddTaskAndSetLowPriority() {
+        //given
+        provideInput(List.of("add cook dinner low", "exit"));
+        //when
+        commandService.run();
+        //then
+        List<String> resultOutput = getSystemOutput(); // actual result
+        assertThat(resultOutput.get(0)).isEqualTo("Enter command");
+        assertThat(resultOutput.get(1)).contains("cook dinner").contains(Priority.LOW.name());
+    }
+    @Test
+    public void shouldAddTaskWithTaskNameContainingPriorityWordInTheMiddle() {
+        //given
+        provideInput(List.of("add report high importance", "exit"));
+        //when
+        commandService.run();
+        //then
+        List<String> resultOutput = getSystemOutput(); // actual result
+        assertThat(resultOutput.get(0)).isEqualTo("Enter command");
+        assertThat(resultOutput.get(1)).contains("report high importance").contains(Priority.AVERAGE.name());
+    }
+
 
 }
